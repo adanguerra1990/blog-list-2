@@ -15,14 +15,33 @@ function App() {
   const [notification, setNotification] = useState(null)
   const [notificationType, setNotificationType] = useState('success')
 
+  useEffect(() => {
+    blogServices.getAll().then(blogs => {
+      setBlogs(blogs)
+    })
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogServices.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async event => {
     event.preventDefault()
 
     try {
       const user = await loginServices.login({ username, password })
+      console.log(user.token)
+      window.localStorage.setItem('loggedBlogListUser', JSON.stringify(user))
+
       setUser(user)
       setPassword('')
       setUsername('')
+      blogServices.setToken(user.token)
       setNotificationType('success')
       setNotification(`logged in user: ${user.name}`)
       setTimeout(() => {
@@ -44,13 +63,8 @@ function App() {
     setTimeout(() => {
       setNotification(null)
     }, 5000)
+    window.localStorage.removeItem('loggedBlogListUser')
   }
-
-  useEffect(() => {
-    blogServices.getAll().then(blogs => {
-      setBlogs(blogs)
-    })
-  }, [])
 
   const addBlog = async blogObject => {
     try {
