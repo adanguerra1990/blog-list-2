@@ -5,36 +5,46 @@ import loginServices from './services/login'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
 
 function App() {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
 
   const handleLogin = async event => {
     event.preventDefault()
 
     try {
       const user = await loginServices.login({ username, password })
-      console.log(user)
       setUser(user)
       setPassword('')
       setUsername('')
-      alert(`logged in user: ${user.name}`)
+      setNotificationType('success')
+      setNotification(`logged in user: ${user.name}`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (error) {
-      alert('login failed:', error)
+      setNotification('Invalid username or password', error)
+      setNotificationType('error')
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
 
-  const handleUsernameChange = event => {
-    setUsername(event.target.value)
+  const handleLogout = () => {
+    setUser(null)
+    setNotificationType('success')
+    setNotification('logged out')
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
-  const handlePassworddChange = event => {
-    setPassword(event.target.value)
-  }
-
-  console.log(blogs)
 
   useEffect(() => {
     blogServices.getAll().then(blogs => {
@@ -42,17 +52,34 @@ function App() {
     })
   }, [])
 
-  const addBlog = blogObject => {
-    blogServices.create(blogObject).then(returnedBlog => {
+  const addBlog = async blogObject => {
+    try {
+      const returnedBlog = await blogServices.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
-    })
+      setNotificationType('success')
+      setNotification(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      )
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (error) {
+      console.log(error)
+      setNotificationType('error')
+      setNotification('failed to add blog:', error)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   return (
     <div>
+      <Notification message={notification} type={notificationType} />
       {user ? (
         <div>
           <h3>Logged in as {user.name}</h3>
+          <button onClick={handleLogout}>Logout</button>
           <BlogForm createBlog={addBlog} />
           <h2>Blogs</h2>
           {blogs.map(blog => (
@@ -62,8 +89,8 @@ function App() {
       ) : (
         <LoginForm
           handleSubmit={handleLogin}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChnage={handlePassworddChange}
+          handleUsernameChange={event => setUsername(event.target.value)}
+          handlePasswordChnage={event => setPassword(event.target.value)}
           username={username}
           password={password}
         />
