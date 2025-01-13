@@ -96,7 +96,11 @@ function App() {
 
     try {
       const returnedBlog = await blogServices.update(id, updateBlog)
-      setBlogs(blogs.map(blog => (blog.id !== id ? blog : returnedBlog)))
+      setBlogs(
+        blogs.map(blog =>
+          blog.id !== id ? blog : { ...returnedBlog, user: blogToLike.user }
+        )
+      )
       setNotification('success')
       setNotification(`you liked '${returnedBlog.title}'`)
       setTimeout(() => {
@@ -112,6 +116,26 @@ function App() {
     }
   }
 
+  const handleDelete = async id => {
+    const blogToDelete = blogs.find(b => b.id === id)
+
+    if (window.confirm(`Delete ${blogToDelete.title}`)) {
+      try {
+        await blogServices.remove(id)
+        setBlogs(blogs.filter(blog => blog.id !== id))
+        setNotificationType('success')
+        setNotification('Blog deleted successfully')
+      } catch (error) {
+        setNotificationType('error')
+        setNotification('Failed to delete blog')
+      } finally {
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      }
+    }
+  }
+
   return (
     <div>
       <Notification message={notification} type={notificationType} />
@@ -124,7 +148,13 @@ function App() {
           </Togglable>
           <h2>Blogs</h2>
           {blogs.map(blog => (
-            <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              handleLike={handleLike}
+              handleDelete={handleDelete}
+            />
           ))}
         </div>
       ) : (
