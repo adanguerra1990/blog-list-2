@@ -6,6 +6,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 function App() {
   const [blogs, setBlogs] = useState([])
@@ -35,7 +36,6 @@ function App() {
 
     try {
       const user = await loginServices.login({ username, password })
-      console.log(user.token)
       window.localStorage.setItem('loggedBlogListUser', JSON.stringify(user))
 
       setUser(user)
@@ -94,7 +94,9 @@ function App() {
         <div>
           <h3>Logged in as {user.name}</h3>
           <button onClick={handleLogout}>Logout</button>
-          <BlogForm createBlog={addBlog} />
+          <Togglable buttonLabel='Create New Blog'>
+            <BlogForm createBlog={addBlog} />
+          </Togglable>
           <h2>Blogs</h2>
           {blogs.map(blog => (
             <Blog key={blog.id} blog={blog} />
