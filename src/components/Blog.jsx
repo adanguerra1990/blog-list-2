@@ -1,12 +1,11 @@
-import React from 'react'
-
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {
   return (
     <div>
       <p>Title: {blog.title}</p>
       <p>Author: {blog.author}</p>
       <p>Url: {blog.url}</p>
-      <p>{blog.likes}</p>
+      <button onClick={() => handleLike(blog.id)}>Like</button>
+      <span>{blog.likes}</span>
     </div>
   )
 }

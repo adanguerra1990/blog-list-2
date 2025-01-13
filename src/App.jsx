@@ -87,6 +87,31 @@ function App() {
     }
   }
 
+  const handleLike = async id => {
+    const blogToLike = blogs.find(blog => blog.id === id)
+    const updateBlog = {
+      ...blogToLike,
+      likes: blogToLike.likes + 1,
+    }
+
+    try {
+      const returnedBlog = await blogServices.update(id, updateBlog)
+      setBlogs(blogs.map(blog => (blog.id !== id ? blog : returnedBlog)))
+      setNotification('success')
+      setNotification(`you liked '${returnedBlog.title}'`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (error) {
+      console.log(error)
+      setNotification('error')
+      setNotification('failed to like blog:', error)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   return (
     <div>
       <Notification message={notification} type={notificationType} />
@@ -99,7 +124,7 @@ function App() {
           </Togglable>
           <h2>Blogs</h2>
           {blogs.map(blog => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLike={handleLike} />
           ))}
         </div>
       ) : (
