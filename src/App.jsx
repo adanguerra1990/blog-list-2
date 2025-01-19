@@ -17,10 +17,12 @@ function App() {
   const [notificationType, setNotificationType] = useState('success')
 
   useEffect(() => {
-    blogServices.getAll().then(blogs => {
-      setBlogs(blogs)
-    })
-  }, [])
+    if (user) {
+      blogServices.getAll().then(blogs => {
+        setBlogs(blogs)
+      })
+    }
+  }, [user])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
