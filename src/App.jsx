@@ -7,14 +7,16 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { useDispatch, useSelector } from 'react-redux'
+import { showNotification } from './redux/notificationReducer'
 
 function App() {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
-  const [notificationType, setNotificationType] = useState('success')
+  const notification = useSelector(state => state.notification)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (user) {
@@ -44,27 +46,15 @@ function App() {
       setPassword('')
       setUsername('')
       blogServices.setToken(user.token)
-      setNotificationType('success')
-      setNotification(`logged in user: ${user.name}`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      dispatch(showNotification(`logged in user: ${user.name}`, 'success', 5))
     } catch (error) {
-      setNotification('Invalid username or password', error)
-      setNotificationType('error')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      dispatch(showNotification('Invalid username or password', 'error', 5))
     }
   }
 
   const handleLogout = () => {
     setUser(null)
-    setNotificationType('success')
-    setNotification('logged out')
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+    dispatch(showNotification('logged out', 'success', 5))
     window.localStorage.removeItem('loggedBlogListUser')
   }
 
@@ -72,20 +62,16 @@ function App() {
     try {
       const returnedBlog = await blogServices.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
-      setNotificationType('success')
-      setNotification(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+
+      dispatch(
+        showNotification(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          'succes',
+          5
+        )
       )
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
     } catch (error) {
-      console.log(error)
-      setNotificationType('error')
-      setNotification('failed to add blog:', error)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      dispatch(showNotification('failed to add blog:', 'error', 5))
     }
   }
 
@@ -103,18 +89,12 @@ function App() {
           blog.id !== id ? blog : { ...returnedBlog, user: blogToLike.user }
         )
       )
-      setNotification('success')
-      setNotification(`you liked '${returnedBlog.title}'`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+
+      dispatch(
+        showNotification(`you liked '${returnedBlog.title}'`, 'succes', 5)
+      )
     } catch (error) {
-      console.log(error)
-      setNotification('error')
-      setNotification('failed to like blog:', error)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      dispatch(showNotification('failed to like blog:', 'error', 5))
     }
   }
 
@@ -125,22 +105,16 @@ function App() {
       try {
         await blogServices.remove(id)
         setBlogs(blogs.filter(blog => blog.id !== id))
-        setNotificationType('success')
-        setNotification('Blog deleted successfully')
+        dispatch(showNotification('Blog deleted successfully', 'success', 5))
       } catch (error) {
-        setNotificationType('error')
-        setNotification('Failed to delete blog')
-      } finally {
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
+        dispatch(showNotification('Failed to delete blog', 'error', 5))
       }
     }
   }
 
   return (
     <div>
-      <Notification message={notification} type={notificationType} />
+      <Notification message={notification.message} type={notification.type} />
       {user ? (
         <div>
           <h3>Logged in as {user.name}</h3>
