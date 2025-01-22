@@ -9,22 +9,22 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { showNotification } from './redux/notificationReducer'
+import { createBlog, initialBlogs } from './redux/blogReducer'
 
 function App() {
-  const [blogs, setBlogs] = useState([])
+  const [setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const notification = useSelector(state => state.notification)
+  const blogs = useSelector(state => state.blogs)
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (user) {
-      blogServices.getAll().then(blogs => {
-        setBlogs(blogs)
-      })
+      dispatch(initialBlogs())
     }
-  }, [user])
+  }, [user, dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogListUser')
@@ -56,23 +56,6 @@ function App() {
     setUser(null)
     dispatch(showNotification('logged out', 'success', 5))
     window.localStorage.removeItem('loggedBlogListUser')
-  }
-
-  const addBlog = async blogObject => {
-    try {
-      const returnedBlog = await blogServices.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
-
-      dispatch(
-        showNotification(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-          'succes',
-          5
-        )
-      )
-    } catch (error) {
-      dispatch(showNotification('failed to add blog:', 'error', 5))
-    }
   }
 
   const handleLike = async id => {
@@ -120,7 +103,7 @@ function App() {
           <h3>Logged in as {user.name}</h3>
           <button onClick={handleLogout}>Logout</button>
           <Togglable buttonLabel='Create New Blog'>
-            <BlogForm createBlog={addBlog} />
+            <BlogForm />
           </Togglable>
           <h2>Blogs</h2>
           {blogs.map(blog => (
