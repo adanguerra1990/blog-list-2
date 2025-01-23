@@ -1,12 +1,26 @@
-import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginUser, updateLoginForm } from '../redux/authReducer'
+import { showNotification } from '../redux/notificationReducer'
 
-const LoginForm = ({
-  handleSubmit,
-  handleUsernameChange,
-  handlePasswordChnage,
-  username,
-  password,
-}) => {
+const LoginForm = () => {
+  const { username, password } = useSelector(state => state.auth.loginForm)
+  const dispatch = useDispatch()
+
+  const handleChange = event => {
+    const { name, value } = event.target
+    dispatch(updateLoginForm({ field: name, value }))
+  }
+
+  const handleSubmit = async event => {
+    event.preventDefault()
+    try {
+      await dispatch(loginUser({ username, password }))
+      dispatch(showNotification(`Welcome ${username}`, 'success', 5))
+    } catch (error) {
+      dispatch(showNotification('Invalid username or password', 'error', 5))
+    }
+  }
+
   return (
     <div>
       <h2>Login</h2>
@@ -16,9 +30,9 @@ const LoginForm = ({
           <input
             type='text'
             value={username}
-            name='Username'
+            name='username'
             autoComplete='current-username'
-            onChange={handleUsernameChange}
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -26,23 +40,15 @@ const LoginForm = ({
           <input
             type='password'
             value={password}
-            name='Password'
+            name='password'
             autoComplete='current-password'
-            onChange={handlePasswordChnage}
+            onChange={handleChange}
           />
         </div>
         <button type='submit'>Login</button>
       </form>
     </div>
   )
-}
-
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChnage: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
 }
 
 export default LoginForm
