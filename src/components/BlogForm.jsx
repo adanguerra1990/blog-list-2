@@ -9,6 +9,12 @@ const BlogForm = () => {
 
   const handleSubmit = async event => {
     event.preventDefault()
+
+    if (!title.trim() || !author.trim() || !url.trim()) {
+      dispatch(showNotification('All fields are required', 'error', 5))
+      return
+    }
+
     try {
       const blogObject = { title, author, url }
       dispatch(createBlog(blogObject))
