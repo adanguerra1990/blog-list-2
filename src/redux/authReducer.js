@@ -5,6 +5,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
+    loading: false,
     loginForm: {
       username: '',
       password: '',
@@ -17,6 +18,9 @@ const authSlice = createSlice({
     clearUser(state) {
       state.user = null
     },
+    setLoading(state, action) {
+      state.loading = action.payload
+    },
     updateLoginForm(state, action) {
       const { field, value } = action.payload
       state.loginForm[field] = value
@@ -27,26 +31,35 @@ const authSlice = createSlice({
   },
 })
 
-export const { setUser, clearUser, updateLoginForm, resetLoginForm } =
-  authSlice.actions
+export const {
+  setUser,
+  clearUser,
+  updateLoginForm,
+  resetLoginForm,
+  setLoading,
+} = authSlice.actions
 
 export const loginUser = credentials => {
-  return async dispathc => {
+  return async dispatch => {
     try {
+      dispatch(setLoading(true))
       const user = await loginServices.login(credentials)
       window.localStorage.setItem('loggedBlogListUser', JSON.stringify(user))
-      dispathc(setUser(user))
-      dispathc(resetLoginForm())
+      dispatch(setUser(user))
+      dispatch(resetLoginForm())
+      dispatch(setLoading(false))
+      return user
     } catch (error) {
-      console.log('Invalid username or password', error)
+      dispatch(setLoading(false))
+      throw new Error('Invalid username or password')
     }
   }
 }
 
 export const logoutUser = () => {
-  return dispathc => {
+  return dispatch => {
     window.localStorage.removeItem('loggedBlogListUser')
-    dispathc(clearUser())
+    dispatch(clearUser())
   }
 }
 

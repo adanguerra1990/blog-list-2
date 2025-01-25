@@ -4,6 +4,7 @@ import { showNotification } from '../redux/notificationReducer'
 
 const LoginForm = () => {
   const { username, password } = useSelector(state => state.auth.loginForm)
+  const { loading } = useSelector(state => state.auth)
   const dispatch = useDispatch()
 
   const handleChange = event => {
@@ -14,10 +15,10 @@ const LoginForm = () => {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      await dispatch(loginUser({ username, password }))
-      dispatch(showNotification(`Welcome ${username}`, 'success', 5))
+      const user = await dispatch(loginUser({ username, password }))
+      dispatch(showNotification(`Welcome ${user.name}`, 'success', 5))
     } catch (error) {
-      dispatch(showNotification('Invalid username or password', 'error', 5))
+      dispatch(showNotification(error.message, 'error', 5))
     }
   }
 
@@ -33,6 +34,7 @@ const LoginForm = () => {
             name='username'
             autoComplete='current-username'
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
         <div>
@@ -43,9 +45,10 @@ const LoginForm = () => {
             name='password'
             autoComplete='current-password'
             onChange={handleChange}
+            disabled={loading}
           />
         </div>
-        <button type='submit'>Login</button>
+        <button type='submit'>{loading ? 'Logging in...' : 'Login'}</button>
       </form>
     </div>
   )
