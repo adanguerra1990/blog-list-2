@@ -17,8 +17,6 @@ function App() {
   const blogs = useSelector(state => state.blogs)
   const dispatch = useDispatch()
 
-  console.log('user', user)
-
   useEffect(() => {
     if (user) {
       dispatch(initialBlogs())
