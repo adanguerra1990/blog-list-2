@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import loginServices from '../services/login'
 import blogServices from '../services/blogs'
+import { initialUsers } from './usersReducer'
 
 const authSlice = createSlice({
   name: 'auth',
@@ -50,6 +51,7 @@ export const loginUser = credentials => {
       dispatch(setUser(user))
       dispatch(resetLoginForm())
       dispatch(setLoading(false))
+      dispatch(initialUsers())
       return user
     } catch (error) {
       dispatch(setLoading(false))
