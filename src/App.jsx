@@ -6,10 +6,13 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
 import { useDispatch, useSelector } from 'react-redux'
 import { showNotification } from './redux/notificationReducer'
 import { initialBlogs } from './redux/blogReducer'
 import { logoutUser, setUser } from './redux/authReducer'
+import { Link, Route, Routes } from 'react-router-dom'
+import User from './components/User'
 
 function App() {
   const user = useSelector(state => state.auth.user)
@@ -40,17 +43,32 @@ function App() {
   return (
     <div>
       <Notification message={notification.message} type={notification.type} />
+      <nav>
+        <Link to={'/'}>Home</Link>
+        <Link to={'/users'}>Users</Link>
+      </nav>
       {user ? (
         <div>
           <h3>Logged in as {user.name}</h3>
           <button onClick={handleLogout}>Logout</button>
-          <Togglable buttonLabel='Create New Blog'>
-            <BlogForm />
-          </Togglable>
-          <h2>Blogs</h2>
-          {blogs.map(blog => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          <Routes>
+            <Route
+              path='/'
+              element={
+                <div>
+                  <Togglable buttonLabel='Create New Blog'>
+                    <BlogForm />
+                  </Togglable>
+                  <h2>Blogs</h2>
+                  {blogs.map(blog => (
+                    <Blog key={blog.id} blog={blog} />
+                  ))}
+                </div>
+              }
+            />
+            <Route path='/users' element={<Users />} />
+            <Route path='/users/:id' element={<User />} />
+          </Routes>
         </div>
       ) : (
         <LoginForm />
