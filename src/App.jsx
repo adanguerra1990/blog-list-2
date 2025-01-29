@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import './App.css'
 import blogServices from './services/blogs'
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
@@ -12,6 +12,7 @@ import { showNotification } from './redux/notificationReducer'
 import { initialBlogs } from './redux/blogReducer'
 import { logoutUser, setUser } from './redux/authReducer'
 import { Link, Route, Routes } from 'react-router-dom'
+import BlogDetails from './components/BlogDetails'
 import User from './components/User'
 
 function App() {
@@ -59,15 +60,13 @@ function App() {
                   <Togglable buttonLabel='Create New Blog'>
                     <BlogForm />
                   </Togglable>
-                  <h2>Blogs</h2>
-                  {blogs.map(blog => (
-                    <Blog key={blog.id} blog={blog} />
-                  ))}
+                  <Blogs />
                 </div>
               }
             />
             <Route path='/users' element={<Users />} />
             <Route path='/users/:id' element={<User />} />
+            <Route path='/blogs/:id' element={<BlogDetails />} />
           </Routes>
         </div>
       ) : (
