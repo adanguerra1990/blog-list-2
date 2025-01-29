@@ -3,6 +3,7 @@ import notificationReducer from './notificationReducer'
 import blogReducer from './blogReducer'
 import formReducer from './formReducer'
 import authReducer from './authReducer'
+import usersReducer from './usersReducer'
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     notification: notificationReducer,
     form: formReducer,
     auth: authReducer,
+    users: usersReducer,
   },
 })
 
