@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import loginServices from '../services/login'
+import blogServices from '../services/blogs'
 
 const authSlice = createSlice({
   name: 'auth',
@@ -45,6 +46,7 @@ export const loginUser = credentials => {
       dispatch(setLoading(true))
       const user = await loginServices.login(credentials)
       window.localStorage.setItem('loggedBlogListUser', JSON.stringify(user))
+      blogServices.setToken(user.token)
       dispatch(setUser(user))
       dispatch(resetLoginForm())
       dispatch(setLoading(false))
@@ -59,6 +61,7 @@ export const loginUser = credentials => {
 export const logoutUser = () => {
   return dispatch => {
     window.localStorage.removeItem('loggedBlogListUser')
+    blogServices.setToken(null)
     dispatch(clearUser())
   }
 }

@@ -6,6 +6,7 @@ import { resetForm, setField } from '../redux/formReducer'
 const BlogForm = () => {
   const dispatch = useDispatch()
   const { title, author, url } = useSelector(state => state.form)
+  const user = useSelector(state => state.auth.user)
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -16,7 +17,7 @@ const BlogForm = () => {
     }
 
     try {
-      const blogObject = { title, author, url }
+      const blogObject = { title, author, url, user: user.id }
       dispatch(createBlog(blogObject))
 
       dispatch(
