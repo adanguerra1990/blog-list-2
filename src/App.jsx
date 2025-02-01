@@ -14,6 +14,7 @@ import { logoutUser, setUser } from './redux/authReducer'
 import { Link, Route, Routes } from 'react-router-dom'
 import BlogDetails from './components/BlogDetails'
 import User from './components/User'
+import NavBar from './components/NavBar'
 
 function App() {
   const user = useSelector(state => state.auth.user)
@@ -44,14 +45,9 @@ function App() {
   return (
     <div>
       <Notification message={notification.message} type={notification.type} />
-      <nav>
-        <Link to={'/'}>Home</Link>
-        <Link to={'/users'}>Users</Link>
-      </nav>
+      <NavBar />
       {user ? (
         <div>
-          <h3>Logged in as {user.name}</h3>
-          <button onClick={handleLogout}>Logout</button>
           <Routes>
             <Route
               path='/'
