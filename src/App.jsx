@@ -8,10 +8,9 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import { useDispatch, useSelector } from 'react-redux'
-import { showNotification } from './redux/notificationReducer'
 import { initialBlogs } from './redux/blogReducer'
-import { logoutUser, setUser } from './redux/authReducer'
-import { Link, Route, Routes } from 'react-router-dom'
+import { setUser } from './redux/authReducer'
+import { Route, Routes } from 'react-router-dom'
 import BlogDetails from './components/BlogDetails'
 import User from './components/User'
 import NavBar from './components/NavBar'
@@ -19,7 +18,6 @@ import NavBar from './components/NavBar'
 function App() {
   const user = useSelector(state => state.auth.user)
   const notification = useSelector(state => state.notification)
-  const blogs = useSelector(state => state.blogs)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -36,11 +34,6 @@ function App() {
       blogServices.setToken(user.token)
     }
   }, [dispatch])
-
-  const handleLogout = () => {
-    dispatch(logoutUser())
-    dispatch(showNotification('logged out', 'success', 5))
-  }
 
   return (
     <div>
