@@ -9,15 +9,20 @@ import {
 } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import Overlay from './Overlay'
+import BlogForm from './BlogForm'
 
 const Blogs = () => {
   const blogs = useSelector(state => state.blogs)
 
-  console.log('blog...', blogs)
-
   return (
     <div>
-      <h2 className='text-2xl text-center font-bold mb-4'>Blogs</h2>
+      <h2 className='text-2xl text-center font-bold my-4'>Blogs</h2>
+      <div className='md:hidden text-center mb-4'>
+        <Overlay buttonLabel='Create New Blog'>
+          {handleClose => <BlogForm onClose={handleClose} />}
+        </Overlay>
+      </div>
       <TableContainer component={Paper} className='shadow-md'>
         <Table>
           <TableHead>
