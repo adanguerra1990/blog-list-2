@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/api/blogs/'
+const baseUrl = '/api/blogs'
+const userUrl = '/api/users'
 
 let token = null
 
@@ -12,10 +13,7 @@ const getUser = async userId => {
   const config = {
     headers: { Authorization: token },
   }
-  const response = await axios.get(
-    `http://localhost:3001/api/users/${userId}`,
-    config
-  )
+  const response = await axios.get(`${userUrl}/${userId}`, config)
   return response.data
 }
 
@@ -50,12 +48,12 @@ const remove = async id => {
 }
 
 const getComments = async id => {
-  const response = await axios.get(`${baseUrl}${id}/comments`)
+  const response = await axios.get(`${baseUrl}/${id}/comments`)
   return response.data
 }
 
 const createComments = async (id, comment) => {
-  const response = await axios.post(`${baseUrl}${id}/comments`, comment)
+  const response = await axios.post(`${baseUrl}/${id}/comments`, comment)
   return response.data
 }
 
