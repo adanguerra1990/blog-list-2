@@ -5,6 +5,8 @@ import { showNotification } from '../redux/notificationReducer'
 import { useEffect } from 'react'
 import { fetchComments } from '../redux/formCommentsReducer'
 import CommentForm from './CommentForm'
+import { Button, Card, Typography } from '@mui/material'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 
 const BlogDetails = () => {
   const { id } = useParams()
@@ -44,22 +46,54 @@ const BlogDetails = () => {
   const canDelete = user && blog.user && blog.user.username === user.username
 
   return (
-    <div>
-      <h2>{blog.title}</h2>
-      <h3>Author: {blog.author}</h3>
-      <p>Url: {blog.url}</p>
-      <button onClick={handleLike}>Like</button>
-      <span>{blog.likes}</span>
-      <p>Create by: {blog.user.name}</p>
-      {canDelete && <button onClick={handleDelete}>Delete</button>}
-      <h3>Comments</h3>
+    <Card className='mt-4 max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg'>
+      <Typography variant='h4' className='text-gray-900 font-bold'>
+        {blog.title}
+      </Typography>
+      <Typography variant='h6' className='text-gray-900 font-bold'>
+        Author: {blog.author}
+      </Typography>
+      <Typography variant='body1' className='text-gray-600'>
+        Url: {blog.url}
+      </Typography>
+
+      <div className='flex items-center gap-4 my-4'>
+        <Button variant='contained' color='primary' onClick={handleLike}>
+          <ThumbUpIcon />
+        </Button>
+        <Typography variant='body1'>{blog.likes}</Typography>
+      </div>
+      <Typography variant='body1' className='text-gray-600'>
+        Create by: {blog.user.name}
+      </Typography>
+      {canDelete && (
+        <Button
+          variant='contained'
+          color='error'
+          className='my-10'
+          onClick={handleDelete}
+        >
+          Delete
+        </Button>
+      )}
+      <div className='my-4'></div>
+      <Typography variant='h5' className='mt-6 text-gray-900 font-semibold'>
+        Comments
+      </Typography>
       <CommentForm blogId={blog.id} />
-      <ul>
-        {comments.map(comment => (
-          <li key={comment.id}>{comment.content}</li>
+      <ul className='mt-4 space-y-2'>
+        {comments.map((comment, index) => (
+          <li
+            key={comment.id}
+            className={`p-3 rounded-lg ${
+              index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+            }`}
+          >
+            {comment.content}
+          </li>
         ))}
       </ul>
-    </div>
+    </Card>
   )
 }
 
