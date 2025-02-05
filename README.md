@@ -66,6 +66,7 @@ Ejemplo de una petición GET para obtener todos los blogs:
 ```bash
 curl https://blog-backend-ackl.onrender.com/api/blogs
 ```
+El código fuente de la API está disponible en el siguiente repositorio de GitHub: [https://github.com/adanguerra1990/blog-backend](https://github.com/adanguerra1990/blog-backend).
 
 ## Contribuir
 
