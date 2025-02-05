@@ -4,6 +4,7 @@ import {
   resetForm,
   setField,
 } from '../redux/formCommentsReducer'
+import { Button, TextField } from '@mui/material'
 
 const CommentForm = ({ blogId }) => {
   const dispatch = useDispatch()
@@ -20,9 +21,18 @@ const CommentForm = ({ blogId }) => {
   }
 
   return (
-    <form onSubmit={handleCommentSubmit}>
-      <input type='text' value={content} onChange={handleCommentChange} />
-      <button type='submit'>Add Comment</button>
+    <form onSubmit={handleCommentSubmit} className='flex gap-2'>
+      <TextField
+        variant='outlined'
+        size='small'
+        placeholder='Write a comment...'
+        type='text'
+        value={content}
+        onChange={handleCommentChange}
+      />
+      <Button type='submit' variant='contained'>
+        Add Comment
+      </Button>
     </form>
   )
 }
