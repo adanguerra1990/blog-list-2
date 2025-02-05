@@ -1,3 +1,12 @@
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
@@ -10,15 +19,27 @@ const User = () => {
   }
 
   return (
-    <div>
-      <h2>{user.name}</h2>
-      <h3>Added Blogs</h3>
-      <ul>
-        {user.blogs.map(blog => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
-    </div>
+    <section className='container mx-auto'>
+      <h2 className='text-2xl text-center font-bold my-4'>{user.name}</h2>
+      <TableContainer component={Paper} className='shadow-md'>
+        <Table>
+          <TableHead>
+            <TableRow className='bg-gray-100'>
+              <TableCell>Added Blogs</TableCell>
+              <TableCell>Likes</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {user.blogs.map(blog => (
+              <TableRow key={blog.id}>
+                <TableCell>{blog.title}</TableCell>
+                <TableCell>{blog.likes}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </section>
   )
 }
 
