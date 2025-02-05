@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../redux/authReducer'
 import { showNotification } from '../redux/notificationReducer'
 import { useState } from 'react'
-import { IconButton, Menu, MenuItem } from '@mui/material'
+import { Button, IconButton, Menu, MenuItem } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import Overlay from './Overlay'
+import BlogForm from './BlogForm'
 
 const NavBar = () => {
   const user = useSelector(state => state.auth.user)
@@ -41,13 +43,20 @@ const NavBar = () => {
           <Link to='/users' className='text-white hover:text-gray-200'>
             Users
           </Link>
-          <span className='text-white'>{user.name} logged in</span>
-          <button
+          <span className='text-white'>{user.name} </span>
+          <Button
+            variant='contained'
+            color='error'
             onClick={handleLogout}
-            className='text-white hover:text-gray-200'
+            className='text-white hover:text-gray-200 bg-gray-700 p-3 rounded-md ml-4'
           >
             Logout
-          </button>
+          </Button>
+          <div className='ml-4'>
+            <Overlay buttonLabel='Create Blog'>
+              {handleClose => <BlogForm onClose={handleClose} />}
+            </Overlay>
+          </div>
         </div>
         <div className='md:hidden'>
           <IconButton
@@ -75,7 +84,7 @@ const NavBar = () => {
               </Link>
             </MenuItem>
             <MenuItem onClick={handleMenuClose}>
-              <span className='text-gray-700'>{user.name} logged in</span>
+              <span className='text-gray-700'>{user.name}</span>
             </MenuItem>
             <MenuItem onClick={handleMenuClose}>
               <button
