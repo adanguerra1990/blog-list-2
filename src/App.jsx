@@ -37,20 +37,17 @@ function App() {
 
   return (
     <div>
-      <Notification message={notification.message} type={notification.type} />
       <NavBar />
+      <Notification message={notification.message} type={notification.type} />
       {user ? (
         <div>
           <Routes>
             <Route
               path='/'
               element={
-                <div>
-                  <Togglable buttonLabel='Create New Blog'>
-                    <BlogForm />
-                  </Togglable>
+                <section className='container mx-auto'>
                   <Blogs />
-                </div>
+                </section>
               }
             />
             <Route path='/users' element={<Users />} />
