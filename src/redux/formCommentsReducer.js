@@ -32,14 +32,12 @@ export const { setComments, addComment, setField, resetForm } =
 export const fetchComments = blogId => {
   return async dispatch => {
     const comments = await blogServices.getComments(blogId)
-    console.log('comentReducer...', comments)
     dispatch(setComments(comments))
   }
 }
 export const createComment = (blogId, comment) => {
   return async dispatch => {
     const newComment = await blogServices.createComments(blogId, comment)
-    console.log('newComment', newComment)
     dispatch(addComment(newComment))
   }
 }

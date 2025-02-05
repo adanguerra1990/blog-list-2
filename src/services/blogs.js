@@ -51,7 +51,6 @@ const remove = async id => {
 
 const getComments = async id => {
   const response = await axios.get(`${baseUrl}${id}/comments`)
-  console.log('grtComments', response.data)
   return response.data
 }
 
