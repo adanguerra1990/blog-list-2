@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && powershell Copy-Item -Recurse -Force ./dist ../blog-backend/",
     "lint": "eslint .",
     "preview": "vite preview"
   },
